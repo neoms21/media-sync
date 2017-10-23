@@ -2,13 +2,18 @@ import React from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {filesSelected} from "../../logic/actions";
+import './styles.css'
 
 // select files with options
 export const FileSelector = ({files, onFilesSelected}) => {
 
     return (
         <div>
-            <input accept="image/*" type="file" onChange={(e) => {
+            <label htmlFor="file-upload" className="custom-file-upload">
+                <i className="fa fa-cloud-upload"></i> Custom Upload
+            </label>
+
+            <input id="file-upload"  accept="image/*" type="file" onChange={(e) => {
                 let selectedFiles = e.target.files;
                 let filesArr = [];
                 const filesLength = selectedFiles.length;
@@ -17,7 +22,6 @@ export const FileSelector = ({files, onFilesSelected}) => {
                 }
                 onFilesSelected(filesArr);
             }} multiple/>
-
 
             {files.map(f => {
                 return <div key={f.name}>{f.name} </div>
