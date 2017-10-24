@@ -9,7 +9,6 @@ export const initialState = {
 const filesReducer = (state = initialState, action) => {
     switch (action.type) {
         case FILES_LOADED:
-            console.log(action.files);
 
             return {
                 ...state,

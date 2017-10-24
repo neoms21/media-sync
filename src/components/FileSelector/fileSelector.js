@@ -5,15 +5,15 @@ import {filesSelected} from "../../logic/actions";
 import './styles.css'
 
 // select files with options
-export const FileSelector = ({files, onFilesSelected}) => {
+const FileSelector = ({files, onFilesSelected}) => {
 
     return (
         <div>
-            <label htmlFor="file-upload" className="custom-file-upload">
-                <i className="fa fa-cloud-upload"></i> Custom Upload
+            <label htmlFor="file-upload" className="custom-file-upload alert alert-info">
+                <i className="fa fa-cloud-upload"></i> Select File(s) to upload
             </label>
 
-            <input id="file-upload"  accept="image/*" type="file" onChange={(e) => {
+            <input id="file-upload" accept="image/*" type="file" onChange={(e) => {
                 let selectedFiles = e.target.files;
                 let filesArr = [];
                 const filesLength = selectedFiles.length;
@@ -24,7 +24,11 @@ export const FileSelector = ({files, onFilesSelected}) => {
             }} multiple/>
 
             {files.map(f => {
-                return <div key={f.name}>{f.name} </div>
+                console.log(URL.createObjectURL(f));
+                return <div className="well well-sm" key={f.name}>
+                    <img className="img-preview" src={URL.createObjectURL(f)}/>
+                    <span>    {f.name} </span>
+                </div>
             })}
         </div>
     )
