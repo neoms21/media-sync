@@ -1,17 +1,22 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import {filesSelected} from "../../logic/actions";
+import {filesSelected, postFiles} from "../../logic/actions";
 import './styles.css'
 
 // select files with options
-const FileSelector = ({files, onFilesSelected}) => {
+const FileSelector = ({files, onFilesSelected, postFiles}) => {
 
     return (
         <div>
             <label htmlFor="file-upload" className="custom-file-upload alert alert-info">
                 <i className="fa fa-cloud-upload"></i> Select File(s) to upload
             </label>
+
+            <button onClick={() => {
+                postFiles(files)
+            }}>Upload
+            </button>
 
             <input id="file-upload" accept="image/*" type="file" onChange={(e) => {
                 let selectedFiles = e.target.files;
@@ -24,7 +29,6 @@ const FileSelector = ({files, onFilesSelected}) => {
             }} multiple/>
 
             {files.map(f => {
-                console.log(URL.createObjectURL(f));
                 return <div className="well well-sm" key={f.name}>
                     <img className="img-preview" src={URL.createObjectURL(f)}/>
                     <span>    {f.name} </span>
@@ -44,7 +48,8 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => ({
-    onFilesSelected: selectedFiles => dispatch(filesSelected(selectedFiles))
+    onFilesSelected: selectedFiles => dispatch(filesSelected(selectedFiles)),
+    postFiles: selectedFiles => dispatch(postFiles(selectedFiles))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(FileSelector);
