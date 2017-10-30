@@ -1,4 +1,4 @@
-import {FILES_LOADED} from './constants';
+import {FILE_SAVE_SUCCESS, FILE_UPLOAD_PROGRESS, FILES_LOADED} from './constants';
 
 
 export const initialState = {
@@ -12,8 +12,19 @@ const filesReducer = (state = initialState, action) => {
 
             return {
                 ...state,
-                files: action.files
+                files: action.files.map(f => {
+                    console.log(f);
+                    return {key: f.name, file: f, size: f.size}
+                })
             };
+
+        case FILE_UPLOAD_PROGRESS:console.log(action.payload);
+            let progressFile = state.files.find(f => f.key === action.payload.name);
+            progressFile.percentCompleted = action.payload.percentage;
+            return {...state, files: [...state.files.filter(f => f.key !== action.payload.name), progressFile]};
+
+        case FILE_SAVE_SUCCESS:
+            return state;
 
         default:
             return state;

@@ -29,9 +29,10 @@ const FileSelector = ({files, onFilesSelected, postFiles}) => {
             }} multiple/>
 
             {files.map(f => {
-                return <div className="well well-sm" key={f.name}>
-                    <img className="img-preview" src={URL.createObjectURL(f)}/>
-                    <span>    {f.name} </span>
+                return <div className="well well-sm" key={f.file.name}>
+                    <img className="img-preview" src={URL.createObjectURL(f.file)}/>
+                    <span>    {f.file.name} </span>
+                    <span>    {f.percentCompleted} </span>
                 </div>
             })}
         </div>
