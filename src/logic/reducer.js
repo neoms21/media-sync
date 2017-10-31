@@ -18,7 +18,7 @@ const filesReducer = (state = initialState, action) => {
                 })
             };
 
-        case FILE_UPLOAD_PROGRESS:console.log(action.payload);
+        case FILE_UPLOAD_PROGRESS:
             let progressFile = state.files.find(f => f.key === action.payload.name);
             progressFile.percentCompleted = action.payload.percentage;
             return {...state, files: [...state.files.filter(f => f.key !== action.payload.name), progressFile]};
