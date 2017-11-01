@@ -13,8 +13,7 @@ const filesReducer = (state = initialState, action) => {
             return {
                 ...state,
                 files: action.files.map(f => {
-                    console.log(f);
-                    return {key: f.name, file: f, size: f.size}
+                        return {key: f.name, file: f, size: f.size}
                 })
             };
 
@@ -24,6 +23,7 @@ const filesReducer = (state = initialState, action) => {
             return {...state, files: [...state.files.filter(f => f.key !== action.payload.name), progressFile]};
 
         case FILE_SAVE_SUCCESS:
+            console.log(action);
             return state;
 
         default:
