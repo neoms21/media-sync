@@ -5,39 +5,13 @@ import {fileProgressEvent, fileSavedSuccessfully} from "../logic/actions";
 
 function progressSubject(fileName) {
     const progressSubscriber = new Subject();
-    progressSubscriber
+    const mapping = progressSubscriber
         .map((e) => {
             return {percentage: (e.loaded / e.total) * 100, name: fileName}
         })
         .map((x) => fileProgressEvent({percentage: x.percentage, name: x.name}));
-    return progressSubscriber;
+    return {mapping, progressSubscriber};
 }
-
-const topStories = `https://hacker-news.firebaseio.com/v0/topstories.json?print=pretty`;
-const url = (id) => `https://hacker-news.firebaseio.com/v0/item/${id}.json?print=pretty`;
-//
-// export const postFilesEpic = action$ =>
-//     action$.ofType(POST_FILES)
-//         .switchMap(({payload}) => {
-//             return Observable.of([15593589, 15595596, 15594542, 15591441, 15594004, 15592800, 15595123, 15593305])
-//             // slice first 5 ids
-//                 .map(ids => ids.slice(0, 5))
-//                 // convert ids -> urls
-//                 .map(ids => {
-//                     console.log(ids);
-//                     return ids.map(url)
-//                 })
-//                 // convert urls -> ajax
-//                 .map(urls => urls.map(url => Observable.ajax.getJSON(url)))
-//                 // execute 5 ajax requests
-//                 .mergeMap(reqs => {
-//                     console.log(reqs);
-//                     return Observable.forkJoin(reqs)
-//                 })
-//                 // results -> store
-//                 .map(stories => fileSavedSuccessfully(stories))
-//         })
-
 
 export const postFilesEpic = action$ =>
     action$.ofType(POST_FILES)
@@ -48,28 +22,26 @@ export const postFilesEpic = action$ =>
 
                         const data = new FormData();
                         data.append('file', p.file);
-                        return Rx.Observable.ajax({
+                        let uploadRequest = Rx.Observable.ajax({
                             method: 'POST',
                             url: `http://localhost:3000/users/save`,
                             body: data,
                             processData: false,
-                            contentType: false,
-                            progressSubscriber: progressSubject(p.file.name)
-                        })
+                            contentType: false
+                        });
+                        return {name: p.file.name, uploadRequest};
 
                     })
 
                 })
-                // .map(reqs => {
-                //         return reqs.map(req => {
-                //             req.request.console.log(req.request);
-                //             return req.request;
-                //         })
-                //     }
-                // )
-                .mergeMap(reqs =>
-                    Observable.forkJoin(reqs)
-                )
+                .mergeMap(reqs => {
+                    reqs.forEach(r => {
+                        const x = progressSubject(r.name);
+                        r.uploadRequest.progressSubscriber = x.progressSubscriber;
+                        r.uploadRequest.merge(x.mapping);
+                    });
+                    return Observable.forkJoin(reqs.map(r => r.uploadRequest))
+                })
                 .map(results =>
                     fileSavedSuccessfully('123')
                 );
