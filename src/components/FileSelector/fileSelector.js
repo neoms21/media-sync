@@ -9,15 +9,19 @@ const FileSelector = ({files, onFilesSelected, postFiles}) => {
 
     return (
         <div>
-            <label htmlFor="file-upload" className="custom-file-upload alert alert-info">
-                <i className="fa fa-cloud-upload"></i> Select File(s) to upload
-            </label>
+            <div className="upload">
+                <label htmlFor="file-upload" className="custom-file-upload alert alert-info">
+                    <i className="fa fa-cloud-upload"></i> Select File(s) to upload
+                </label>
 
-            <button onClick={() => {
-                postFiles(files)
-            }}>Upload
-            </button>
-
+                <button className={`btn btn-success ${files.length === 0 ? 'disabled' : ''}`} onClick={() => {
+                    // postFiles(files)
+                    files.forEach(f => {
+                        postFiles(f);
+                    });
+                }}>Upload
+                </button>
+            </div>
             <input id="file-upload" accept="image/*" type="file" onChange={(e) => {
                 let selectedFiles = e.target.files;
                 let filesArr = [];
@@ -27,12 +31,13 @@ const FileSelector = ({files, onFilesSelected, postFiles}) => {
                 }
                 onFilesSelected(filesArr);
             }} multiple/>
-
             {files.map(f => {
                 return <div className="well well-sm" key={f.file.name}>
-                    <img className="img-preview" src={URL.createObjectURL(f.file)}/>
+                    <img alt={f.file.name} className="img-preview" src={URL.createObjectURL(f.file)}/>
                     <span>    {f.file.name} </span>
-                    <span>    {f.percentCompleted} </span>
+
+                    {f.percentCompleted === 100 ? <span className="glyphicon glyphicon-ok indicator"></span> :
+                        <span className="indicator">{f.percentCompleted}%</span>}
                 </div>
             })}
         </div>
