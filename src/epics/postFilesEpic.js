@@ -1,6 +1,6 @@
 import Rx, {Observable, Subject} from 'rxjs';
-import {POST_FILES} from "../logic/constants";
-import {fileProgressEvent, fileSavedSuccessfully} from "../logic/actions";
+import {POST_FILES, UPLOAD_COMPLETE} from "../logic/constants";
+import {arrangementComplete, fileProgressEvent, fileSavedSuccessfully} from "../logic/actions";
 
 export const postFilesEpic = action$ =>
     action$.ofType(POST_FILES)
@@ -12,7 +12,7 @@ export const postFilesEpic = action$ =>
 
             const request = Rx.Observable.ajax({
                 method: 'POST',
-                url: `http://localhost:3000/users/save`,
+                url: `http://localhost:3000/pictures/save`,
                 body: data,
                 processData: false,
                 contentType: false,
@@ -20,7 +20,7 @@ export const postFilesEpic = action$ =>
             });
 
             const requestObservable = request
-                .map(() => fileSavedSuccessfully('done d'))
+                .map(() => fileSavedSuccessfully(action.payload.file.name))
                 .catch((err) => Observable.of({type: 'error', err}));
 
             return progressSubscriber
@@ -29,4 +29,21 @@ export const postFilesEpic = action$ =>
                 })
                 .map((x) => (fileProgressEvent({percentage: x.percentage, name: x.name})))
                 .merge(requestObservable);
+        });
+
+
+export const filesUploadedEpic = action$ =>
+    action$.ofType(UPLOAD_COMPLETE)
+        .mergeMap((action) => {
+            console.log(action);
+            const data = new FormData();
+            data.append('files', action.payload.files);
+            data.append('folder', action.payload.folder);
+            const request = Rx.Observable.ajax.post(`http://localhost:3000/files/arrange`, action.payload, {'Content-Type': 'application/json'});
+
+            return request
+                .map(() => arrangementComplete('Files moved'))
+                .catch((err) => Observable.of({type: 'error', err}));
+
+
         });
