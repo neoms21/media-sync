@@ -1,4 +1,5 @@
 import {
+    APP_ERROR,
     ARNG_COMPLETE,
     FILE_SAVE_SUCCESS, FILE_UPLOAD_PROGRESS, FILES_LOADED, FOLDER_NAME_CHANGED, POST_FILES, UPLOAD_COMPLETE,
 } from './constants';
@@ -31,4 +32,9 @@ export const uploadComplete = content => {
 export const arrangementComplete = content => {
     console.log(content);
     return {type: ARNG_COMPLETE, payload: content};
+};
+
+export const errorOccurred = content => {
+
+    return {type: APP_ERROR, payload: content};
 };

@@ -6,16 +6,14 @@ import './styles.css'
 
 
 class FileSelector extends Component {
-
-    constructor(props) {
-        super(props);
-    }
-
     componentWillReceiveProps = (nextState) => {
         if (nextState.files.length < 1 || nextState.folder === '')
             return;
 
-        if (nextState.files.reduce((x, y) => (x.uploadComplete && y.uploadComplete))) {
+        if (nextState.files.map(f =>
+                (f.uploadComplete)).every(function (x) {
+                return x && true;
+            })) {
             this.props.uploadComplete({
                 folder: this.props.folder, files: nextState.files.map(f => {
                     return f.name
@@ -25,9 +23,12 @@ class FileSelector extends Component {
     };
 
     render() {
-        const {files, onFilesSelected, postFile, folder, folderNameChanged} = this.props;
+        const {files, onFilesSelected, postFile, folder, folderNameChanged, error} = this.props;
 
         return (<div>
+            <div>
+                {error}
+            </div>
             <div className="upload">
 
                 <label htmlFor="file-upload" className="custom-file-upload alert alert-info">
@@ -47,7 +48,7 @@ class FileSelector extends Component {
                     folderNameChanged(e.target.value);
                 }}/>
             </div>
-            <input id="file-upload" accept="image/*" type="file" onChange={(e) => {
+            <input id="file-upload" accept="image/*,video/mp4,video/x-m4v,video/*" type="file" onChange={(e) => {
                 let selectedFiles = e.target.files;
                 let filesArr = [];
                 const filesLength = selectedFiles.length;
@@ -58,7 +59,7 @@ class FileSelector extends Component {
             }} multiple/>
             {files.map(f => {
                 return <div className="well well-sm" key={f.file.name}>
-                    <img alt={f.file.name} className="img-preview" src={URL.createObjectURL(f.file)}/>
+                    {/*<img alt={f.file.name} className="img-preview" src={URL.createObjectURL(f.file)}/>*/}
                     <span>    {f.file.name} </span>
 
                     {f.percentCompleted === 100 ? <span className="glyphicon glyphicon-ok indicator"></span> :
@@ -69,26 +70,13 @@ class FileSelector extends Component {
     }
 }
 
-// select files with options
-// const FileSelector = () => {
-//
-//
-//     function componentWillReceiveProps(nextState) {
-//         console.log(nextState);
-//     }
-//
-//     return (
-//
-//     )
-// };
-
 
 FileSelector.propTypes = {
     onFilesSelected: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => {
-    return {files: state.files.files, folder: state.files.folder};
+    return {files: state.files.files, folder: state.files.folder, error: state.files.error};
 };
 
 const mapDispatchToProps = dispatch => ({
