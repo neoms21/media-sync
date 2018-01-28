@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import {filesSelected, folderNameChanged, postFile, uploadComplete} from "../../logic/actions";
+import { filesSelected, folderNameChanged, postFile, uploadComplete } from "../../logic/actions";
 import './styles.css'
 
 
@@ -60,7 +60,6 @@ class FileSelector extends Component {
 
             {files.map(f => {
                 return <div className="well well-sm" key={f.file.name}>
-                    {/*<img alt={f.file.name} className="img-preview" src={URL.createObjectURL(f.file)}/>*/}
                     <span>    {f.file.name} </span>
 
                     {f.percentCompleted === 100 ? <span className="glyphicon glyphicon-ok indicator"></span> :
