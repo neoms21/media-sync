@@ -1,18 +1,23 @@
 import {
     APP_ERROR,
     ARNG_COMPLETE,
-    FILE_SAVE_SUCCESS, FILE_UPLOAD_PROGRESS, FILES_LOADED, FOLDER_NAME_CHANGED, POST_FILES, UPLOAD_COMPLETE,
+    FILE_SAVE_SUCCESS,
+    FILE_UPLOAD_PROGRESS,
+    FILES_LOADED,
+    FOLDER_NAME_CHANGED,
+    POST_FILES,
+    UPLOAD_COMPLETE,
 } from './constants';
 
-export const filesSelected = content => {
-    return {type: FILES_LOADED, files: content};
+export const filesSelected = (files, length) => {
+    return {type: FILES_LOADED, payload: {files, length}};
 };
 
 export const folderNameChanged = content => {
     return {type: FOLDER_NAME_CHANGED, payload: content};
 };
 
-export const  postFile = content => {
+export const postFile = content => {
     return {type: POST_FILES, payload: content};
 };
 

@@ -7,9 +7,25 @@ body {
 .dir {
   display: flex;
   width: 100%;
+  background: #dff9fb;
   border: solid 1px lightblue;
+  padding: 1rem;
+  align-items: center;
 }
 
 .dir__label {
-  padding: 1rem;
+  margin-right: 1rem;
+}
+
+.dir__input {
+  flex: .4;
+  height: 4rem;
+}
+
+.images {
+  margin-top: 20px;
+
+  .well {
+    margin-bottom: 10px;
+  }
 }

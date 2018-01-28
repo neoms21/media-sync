@@ -1,4 +1,4 @@
-import {APP_ERROR, FILE_SAVE_SUCCESS, FILE_UPLOAD_PROGRESS, FILES_LOADED, FOLDER_NAME_CHANGED} from './constants';
+import { APP_ERROR, FILE_SAVE_SUCCESS, FILE_UPLOAD_PROGRESS, FILES_LOADED, FOLDER_NAME_CHANGED } from './constants';
 
 
 export const initialState = {
@@ -21,9 +21,18 @@ const filesReducer = (state = initialState, action) => {
     switch (action.type) {
         case FILES_LOADED:
 
+            const {files, length} = action.payload;
+            let selectedFiles = files;
+            let filesArr = [];
+
+            for (let i = 0; i < length; i++) {
+                filesArr.push(selectedFiles[i]);
+            }
+            console.log(filesArr);
+
             return {
                 ...state,
-                files: action.files.map(f => {
+                files: filesArr.map(f => {
                     return {name: f.name, file: f, percentCompleted: 0, uploadComplete: false}
                 })
             };

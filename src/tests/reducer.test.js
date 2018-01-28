@@ -1,4 +1,4 @@
-import FilesReducer from '../logic/reducer';
+import FilesReducer from '../logic/files-reducer';
 import {FILE_SAVE_SUCCESS, FILE_UPLOAD_PROGRESS} from "../logic/constants";
 
 describe('Files reducer', () => {
