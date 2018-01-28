@@ -42,7 +42,7 @@ class FileSelector extends Component {
                 }}>Upload
                 </button>
             </div>
-            <div className="">
+            <div className="folder-name">
                 <label>Folder Name</label>
                 <input value={folder} onChange={(e) => {
                     folderNameChanged(e.target.value);
@@ -57,6 +57,7 @@ class FileSelector extends Component {
                 }
                 onFilesSelected(filesArr);
             }} multiple/>
+
             {files.map(f => {
                 return <div className="well well-sm" key={f.file.name}>
                     {/*<img alt={f.file.name} className="img-preview" src={URL.createObjectURL(f.file)}/>*/}
